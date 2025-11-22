@@ -1,0 +1,4 @@
+directories = []
+max_depth = 1
+display_tilde = true
+exclude_current_session = true
