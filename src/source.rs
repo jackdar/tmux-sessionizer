@@ -13,7 +13,7 @@ pub enum Source {
 impl Source {
     pub fn display_name(&self, display_tilde: bool) -> String {
         match self {
-            Source::TmuxSession(name) => format!("[TMUX] {}", name.clone()),
+            Source::TmuxSession(name) => format!("[*] {}", name.clone()),
             Source::Directory(p) => {
                 if display_tilde {
                     path::collapse_tilde(p)

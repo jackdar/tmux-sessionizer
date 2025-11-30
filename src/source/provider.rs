@@ -76,7 +76,7 @@ impl<'a> SourceProvider<'a> {
     /// Remove duplicate paths from the collected directories
     fn deduplicate_paths(&self, mut paths: Vec<PathBuf>) -> Vec<PathBuf> {
         // Sort to ensure consistent ordering
-        // paths.sort();
+        paths.sort();
         paths.dedup();
         paths
     }

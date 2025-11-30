@@ -1,7 +1,7 @@
 use std::io::Cursor;
 
 use skim::{
-    Skim,
+    RankCriteria, Skim,
     prelude::{SkimItemReader, SkimOptionsBuilder},
 };
 
@@ -14,9 +14,11 @@ pub fn fuzzy_pick_session(sources: Vec<Source>) -> Option<Source> {
         .collect::<Vec<String>>()
         .join("\n");
 
+    // Tiebreak by index to ensure consistent selection order
     let options = SkimOptionsBuilder::default()
         .height("100%".to_string())
         .multi(false)
+        .tiebreak(vec![RankCriteria::Index])
         .build()
         .unwrap();
 
