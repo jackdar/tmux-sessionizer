@@ -1,13 +1,3 @@
-fn main() {
-    println!("Hello, world!");
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_main() {
-        main();
-    }
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    tmux_sessionizer::run()
 }
