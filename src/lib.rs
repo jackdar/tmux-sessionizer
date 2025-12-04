@@ -1,31 +1,39 @@
-use std::error::Error;
+use std::{error::Error, path::PathBuf};
 
 use clap::Parser;
 
-use crate::{cli::Cli, commands::CommandError};
+use crate::cli::Cli;
 
 mod cli;
-mod commands;
 mod config;
+mod dir;
+mod session;
+mod source;
+mod tmux;
 
 pub fn run() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
 
-    if let Some(name) = cli.name.as_deref() {
-        println!("Session name provided: {}", name);
-    }
+    let config = config::Config::load_or_default(
+        &cli.config.unwrap_or_else(|| config::default_config_path()),
+    );
 
-    let config_path = cli.config.unwrap_or_else(|| config::default_config_path());
+    match &cli.session {
+        Some(session) => {
+            let dir = PathBuf::from(&session);
+            let name = dir.file_name().unwrap().to_str().unwrap().replace('.', "_");
 
-    #[allow(unused_variables)]
-    let config = config::Config::load_or_default(&config_path);
-
-    match &cli.command {
-        Some(cli::Commands::Switch { name }) => commands::switch_session(name)?,
-        Some(cli::Commands::List { exclude_current }) => {
-            commands::list_sessions(&config, *exclude_current)?
+            if tmux::session_exists(&name)? {
+                tmux::switch_session(&name)?;
+            } else {
+                tmux::new_session(&name, &dir)?;
+            }
         }
-        None => return Err(CommandError::NoCommandProvided.into()),
+        None => source::gather_sources(&config).map(|sources| {
+            for source in sources {
+                println!("{}", source);
+            }
+        })?,
     }
 
     Ok(())

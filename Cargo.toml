@@ -8,4 +8,5 @@ clap = { version = "4.5.53", features = ["derive"] }
 dirs = "6.0.0"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_toml = "0.0.1"
+tmux_interface = "0.3.2"
 toml = "0.9.8"

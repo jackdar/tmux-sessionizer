@@ -1,0 +1,5 @@
+directories = [
+  "~/personal:2",
+  "~/projects:1",
+  "~/github"
+]

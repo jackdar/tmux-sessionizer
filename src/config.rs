@@ -1,33 +1,23 @@
-use std::{error::Error, fmt::Display, path::PathBuf};
+use std::path::{Path, PathBuf};
+use std::{error::Error, fmt::Display};
 
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 pub struct Config {
     pub directories: Vec<String>,
 }
 
 impl Config {
-    fn from_file(path: &PathBuf) -> Result<Self, ConfigError> {
+    pub fn load_or_default(path: &Path) -> Self {
+        Self::from_file(path).unwrap_or_default()
+    }
+
+    fn from_file(path: &Path) -> Result<Self, ConfigError> {
         let config_content =
             std::fs::read_to_string(path).map_err(|_| ConfigError::FileNotFound)?;
-        let config: Config = toml::from_str(&config_content).map_err(ConfigError::ParseError)?;
+        let config = toml::from_str(&config_content).map_err(ConfigError::ParseError)?;
         Ok(config)
-    }
-
-    pub fn load_or_default(path: &PathBuf) -> Self {
-        match Self::from_file(path) {
-            Ok(config) => config,
-            Err(_) => Self::default(),
-        }
-    }
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            directories: Vec::new(),
-        }
     }
 }
 
