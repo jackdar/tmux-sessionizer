@@ -1,8 +1,8 @@
-use std::fmt::Display;
+use std::{fmt::Display, path::PathBuf};
 
 use crate::{
     config,
-    dir::{self, Directory},
+    dir::{self},
     session::{self, Session},
     tmux,
 };
@@ -10,14 +10,14 @@ use crate::{
 #[derive(Debug)]
 pub enum Source {
     Session(Session),
-    Directory(Directory),
+    Directory(PathBuf),
 }
 
 impl Display for Source {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Session(session) => write!(f, "[*] {}", session),
-            Self::Directory(dir) => write!(f, "{}", dir),
+            Self::Directory(dir) => write!(f, "{}", dir.display()),
         }
     }
 }
@@ -33,15 +33,8 @@ pub fn gather_sources(config: &config::Config) -> Result<Vec<Source>, Box<dyn st
     );
 
     sources.extend(
-        config
-            .directories
-            .iter()
-            .map(|d| Source::Directory(dir::parse_directory(d))),
-    );
-
-    sources.extend(
-        dir::list_directories(&config.directories)
-            .iter()
+        dir::list_directories(&config.directories)?
+            .into_iter()
             .map(Source::Directory),
     );
 

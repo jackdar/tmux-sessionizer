@@ -10,3 +10,4 @@ serde = { version = "1.0.228", features = ["derive"] }
 serde_toml = "0.0.1"
 tmux_interface = "0.3.2"
 toml = "0.9.8"
+walkdir = "2.5.0"

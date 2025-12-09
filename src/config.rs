@@ -40,9 +40,10 @@ impl Error for ConfigError {}
 
 /// Default config file located at `$HOME/.config/tmux-sessionizer/config.toml`
 pub fn default_config_path() -> PathBuf {
-    dirs::home_dir()
-        .unwrap_or_else(|| PathBuf::from("."))
-        .join(".config")
-        .join("tmux-sessionizer")
-        .join("config.toml")
+    PathBuf::from("config.toml")
+    // dirs::home_dir()
+    //     .unwrap_or_else(|| PathBuf::from("."))
+    //     .join(".config")
+    //     .join("tmux-sessionizer")
+    //     .join("config.toml")
 }
