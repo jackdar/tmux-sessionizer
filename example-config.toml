@@ -1,0 +1,6 @@
+directories = [
+    "~",
+]
+show_hidden = false
+follow_symlinks = false
+expand_tilde = false
