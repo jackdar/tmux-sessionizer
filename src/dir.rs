@@ -86,14 +86,10 @@ pub fn expand_path(path: &str) -> PathBuf {
 }
 
 pub fn contract_path(path: &Path) -> String {
-    if let Some(home) = dirs::home_dir() {
-        if path.starts_with(&home) {
-            return path
-                .to_str()
-                .unwrap()
-                .replace(&home.to_str().unwrap(), "~")
-                .to_string();
-        }
+    if let Some(home) = dirs::home_dir()
+        && path.starts_with(&home)
+    {
+        return path.to_str().unwrap().replace(home.to_str().unwrap(), "~");
     }
 
     path.to_str().unwrap().to_string()

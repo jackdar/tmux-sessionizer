@@ -1,6 +1,13 @@
+# List of base directories to scan.
+# Each entry is "path" or "path:depth".
 directories = [
-    "~",
+  "~/code:2",
+  "~/work:3",
 ]
+
 show_hidden = false
 follow_symlinks = false
+
+# If false, directories are shown as "~"-contracted paths in the picker.
+# If true, full expanded paths are shown.
 expand_tilde = false
