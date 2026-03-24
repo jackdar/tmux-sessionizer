@@ -88,7 +88,7 @@ impl Picker for FzfPicker {
         if selection.is_empty() {
             Ok(None)
         } else {
-            Ok(Some(String::from(selection)))
+            Ok(Some(selection))
         }
     }
 }

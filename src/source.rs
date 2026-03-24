@@ -25,8 +25,8 @@ impl From<String> for Source {
 
 impl From<&str> for Source {
     fn from(value: &str) -> Self {
-        if value.starts_with("[*] ") {
-            Source::TmuxSession(value[4..].to_string())
+        if let Some(stripped) = value.strip_prefix("[*] ") {
+            Source::TmuxSession(stripped.to_string())
         } else {
             Source::Directory(expand_path(value))
         }

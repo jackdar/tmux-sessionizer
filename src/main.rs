@@ -35,8 +35,8 @@ fn main() -> Result<(), SessionizerError> {
     let config = config::Config::try_from(cli.config)?;
 
     let session_manager = session::SessionManager {
-        tmux_client: TmuxManager::default(),
-        picker: FzfPicker::default(),
+        tmux_client: TmuxManager,
+        picker: FzfPicker,
     };
 
     session_manager.run(cli.session, &config)

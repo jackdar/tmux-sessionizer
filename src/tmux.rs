@@ -90,7 +90,7 @@ impl TmuxExt for Tmux<'_> {
     fn check_status(self) -> Result<(), TmuxError> {
         match self.status() {
             Ok(status) if status.success() => Ok(()),
-            Ok(status) => Err(TmuxError::CommandFailed(status.clone())),
+            Ok(status) => Err(TmuxError::CommandFailed(status)),
             Err(e) => Err(TmuxError::ExecutionError(e.to_string())),
         }
     }
