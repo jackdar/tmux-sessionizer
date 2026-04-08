@@ -38,26 +38,23 @@ impl TmuxClient for TmuxManager {
     }
 
     fn list_sessions(&self) -> Result<Vec<String>, TmuxError> {
-        let mut output = vec![];
-
-        let cmd = Tmux::with_command(ListSessions::new())
+        let cmd = Tmux::with_command(ListSessions::new().format("#{session_name}"))
             .output()
             .map_err(|e| TmuxError::ExecutionError(e.to_string()))?;
 
         if !cmd.status().success() {
             if is_tmux_server_unavailable(cmd.status()) {
-                return Ok(output);
+                return Ok(vec![]);
             }
 
             return Err(TmuxError::CommandFailed(cmd.status()));
         }
 
-        String::from_utf8_lossy(&cmd.stdout())
+        Ok(String::from_utf8(cmd.stdout())
+            .unwrap()
             .lines()
-            .map(format_session_line)
-            .for_each(|l| output.push(l));
-
-        Ok(output)
+            .map(String::from)
+            .collect::<Vec<String>>())
     }
 
     fn session_exists(&self, name: &str) -> Result<bool, TmuxError> {
@@ -94,11 +91,4 @@ impl TmuxExt for Tmux<'_> {
             Err(e) => Err(TmuxError::ExecutionError(e.to_string())),
         }
     }
-}
-
-fn format_session_line(line: &str) -> String {
-    line.split(':')
-        .next()
-        .map(String::from)
-        .unwrap_or_else(|| line.to_string())
 }
